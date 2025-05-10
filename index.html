@@ -9,7 +9,8 @@
 
   <script>
     async function triggerTest() {
-        const response = await fetch("https://api.github.com/repos/gururajhm-neo/localdriver/actions/workflows/playwright-live.yml/dispatches", {
+        const response = await fetch("https://api.github.com/repos/TestNeoAI/localdriver/actions/workflows/playwright-live.yml/dispatches", 
+        {
             method: "POST",
         headers: {
           "Authorization": "Bearer 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",
@@ -17,44 +18,9 @@
         },
         body: JSON.stringify({ ref: "main" })
       });
-      if (response.ok) {
-    document.getElementById("status").innerText = "Test started. Waiting for live session URL...";
-    
-    // Wait and poll for ngrok URL (simplified version)
-    setTimeout(async () => {
-      const logs = await fetch("https://api.github.com/repos/gururajhm-neo/localdriver/actions/runs?branch=main", {
-        headers: {
-          "Authorization": "Bearer YOUR_GITHUB_PAT"
-        }
-      });
-      const runs = await logs.json();
-      const latestRunId = runs.workflow_runs[0].id;
+      alert("Test started. Please wait a few seconds...");
 
-      // Get logs from the latest run
-      const logResp = await fetch(`https://api.github.com/repos/gururajhm-neo/localdriver/actions/runs/${latestRunId}/logs`, {
-        headers: {
-          "Authorization": "Bearer YOUR_GITHUB_PAT"
-        }
-      });
-      const logBlob = await logResp.blob();
-      const logText = await logBlob.text();
-      const match = logText.match(/https:\/\/.*\.ngrok\.io/);
-
-      if (match) {
-        const ngrokUrl = match[0];
-        document.getElementById("status").innerText = `Live session started at: ${ngrokUrl}`;
-        const iframe = document.getElementById("vncFrame");
-        iframe.src = ngrokUrl;
-        iframe.style.display = "block";
-      } else {
-        document.getElementById("status").innerText = "Could not find ngrok URL. Please check the GitHub Actions logs.";
-      }
-    }, 30000); // Wait 30 sec to give time for ngrok to start
-  } else {
-    document.getElementById("status").innerText = "Failed to start test. Check GitHub settings.";
-  }
-}
-
+    }
      
   </script>
 </body>
