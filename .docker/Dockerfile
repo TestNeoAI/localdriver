@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
 
 # Start script
-COPY start.sh /start.sh
+COPY .docker/start.sh /start.sh
 RUN chmod +x /start.sh
 
 EXPOSE 5900 6080
