@@ -1,19 +1,16 @@
 #!/bin/bash
-Xvfb :99 -screen 0 1920x1080x16 &
-export DISPLAY=:99
 
+# Start a virtual display
+Xvfb :1 -screen 0 1024x768x16 &
+
+# Start window manager
 fluxbox &
 
 # Start VNC server
-x11vnc -display :99 -forever -passwd 1234 -shared &
+x11vnc -forever -usepw -display :1 &
 
-# Start noVNC
+# Start noVNC (websockify)
 websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
-sleep 5
 
-# Run your playwright test (sample)
-npx playwright install
-npx playwright test
-
-# Keep container alive
+# Keep container running
 tail -f /dev/null
