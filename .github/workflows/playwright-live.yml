@@ -1,7 +1,7 @@
 name: Playwright Live VNC
 
 on:
-  main:
+  workflow_dispatch:
 
 jobs:
   live-test:
