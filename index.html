@@ -17,14 +17,45 @@
         },
         body: JSON.stringify({ ref: "main" })
       });
-      alert("Test started. Please wait a few seconds...");
+      if (response.ok) {
+    document.getElementById("status").innerText = "Test started. Waiting for live session URL...";
+    
+    // Wait and poll for ngrok URL (simplified version)
+    setTimeout(async () => {
+      const logs = await fetch("https://api.github.com/repos/gururajhm-neo/localdriver/actions/runs?branch=main", {
+        headers: {
+          "Authorization": "Bearer YOUR_GITHUB_PAT"
+        }
+      });
+      const runs = await logs.json();
+      const latestRunId = runs.workflow_runs[0].id;
 
-      setTimeout(async () => {
-        const tunnel = await fetch("http://127.0.0.1:4040/api/tunnels").then(r => r.json());
-        const url = tunnel.tunnels[0].public_url;
-        document.getElementById('vnc').src = url;
-      }, 20000);
-    }
+      // Get logs from the latest run
+      const logResp = await fetch(`https://api.github.com/repos/gururajhm-neo/localdriver/actions/runs/${latestRunId}/logs`, {
+        headers: {
+          "Authorization": "Bearer YOUR_GITHUB_PAT"
+        }
+      });
+      const logBlob = await logResp.blob();
+      const logText = await logBlob.text();
+      const match = logText.match(/https:\/\/.*\.ngrok\.io/);
+
+      if (match) {
+        const ngrokUrl = match[0];
+        document.getElementById("status").innerText = `Live session started at: ${ngrokUrl}`;
+        const iframe = document.getElementById("vncFrame");
+        iframe.src = ngrokUrl;
+        iframe.style.display = "block";
+      } else {
+        document.getElementById("status").innerText = "Could not find ngrok URL. Please check the GitHub Actions logs.";
+      }
+    }, 30000); // Wait 30 sec to give time for ngrok to start
+  } else {
+    document.getElementById("status").innerText = "Failed to start test. Check GitHub settings.";
+  }
+}
+
+     
   </script>
 </body>
 </html>
