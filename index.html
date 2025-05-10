@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Live Test Viewer</title></head>
+<body>
+  <h1>Automation Live UI</h1>
+  <button onclick="triggerTest()">Run Test</button>
+  <br/><br/>
+  <iframe id="vnc" width="100%" height="600px"></iframe>
+
+  <script>
+    async function triggerTest() {
+        const response = await fetch("https://api.github.com/repos/gururajhm-neo/localdriver/actions/workflows/playwright-live.yml/dispatches", {
+            method: "POST",
+        headers: {
+          "Authorization": "Bearer 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",
+          "Accept": "application/vnd.github.v3+json"
+        },
+        body: JSON.stringify({ ref: "main" })
+      });
+      alert("Test started. Please wait a few seconds...");
+
+      setTimeout(async () => {
+        const tunnel = await fetch("http://127.0.0.1:4040/api/tunnels").then(r => r.json());
+        const url = tunnel.tunnels[0].public_url;
+        document.getElementById('vnc').src = url;
+      }, 20000);
+    }
+  </script>
+</body>
+</html>
