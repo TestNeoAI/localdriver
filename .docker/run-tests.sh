@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export DISPLAY=:1  # Important for GUI display to show in VNC
+export DISPLAY=:99 # Important for GUI display to show in VNC
 
 # Optional: run a window manager like openbox (only once)
 # openbox &
