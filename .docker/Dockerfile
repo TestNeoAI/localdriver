@@ -12,7 +12,8 @@ COPY .docker/run-tests.sh /run-tests.sh
 
 RUN chmod +x /start.sh /run-tests.sh
 
-RUN pip3 install flask
+RUN pip3 install flask flask-cors
+
 
 EXPOSE 5900 6080 6081
 
