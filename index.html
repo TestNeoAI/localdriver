@@ -21,7 +21,7 @@
     async function triggerTest() {
       // This assumes the container running at ACI has a web server 
       // with a /run-test endpoint or similar
-      const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6080/run-test");
+      const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6081/run-test");
 
       if (response.ok) {
         alert("Test started.");
