@@ -1,18 +1,17 @@
 #!/bin/bash
-set -e
 
-# Start virtual display on :1
+# Start virtual display
 Xvfb :1 -screen 0 1024x768x16 &
-export DISPLAY=:1
 
-# Start lightweight window manager
+# Start window manager
 fluxbox &
 
-# Start VNC server without password, ensure it's bound to correct display and port 5900
-x11vnc -display :1 -forever -nopw -rfbport 5900 &
+# Start VNC server
+x11vnc -forever -usepw -display :1 &
 
-# Start noVNC websockify, routing to the same port used by x11vnc
-websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
+# Start noVNC with proper proxy
+cd /usr/share/novnc
+./utils/novnc_proxy --vnc localhost:5900 --listen 6080 &
 
-# Start the Flask server (this should be the main foreground process)
+# Start Flask server (DO NOT background this process)
 python3 /server.py
