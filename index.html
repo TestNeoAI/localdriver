@@ -19,16 +19,19 @@
 
   <script>
     async function triggerTest() {
-      // This assumes the container running at ACI has a web server 
-      // with a /run-test endpoint or similar
-      const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6081/run-test");
-
-      if (response.ok) {
-        alert("Test started.");
-      } else {
-        alert("Failed to start test.");
+      try {
+        const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6081/run-test");
+        if (response.ok) {
+          alert("Test started. Watch the VNC screen.");
+        } else {
+          alert("Failed to start test.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error triggering test.");
       }
     }
   </script>
+  
 </body>
 </html>
