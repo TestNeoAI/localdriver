@@ -3,7 +3,7 @@ from flask_cors import CORS
 import subprocess
 
 app = Flask(__name__)
-CORS(app)  # 👈 This line enables CORS for all domains
+CORS(app)  # Enables CORS for all routes
 
 @app.route('/run-test', methods=['GET'])
 def run_test():
