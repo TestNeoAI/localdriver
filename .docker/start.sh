@@ -12,5 +12,8 @@ x11vnc -forever -usepw -display :1 &
 # Start noVNC (websockify)
 websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
 
+# Start Flask server for triggering test
+python3 /server.py &
+
 # Keep container running
 tail -f /dev/null

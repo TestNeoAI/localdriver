@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html>
-<head><title>Live Test Viewer</title></head>
+<head>
+  <title>Live Test Viewer</title>
+</head>
 <body>
   <h1>Automation Live UI</h1>
+
   <button onclick="triggerTest()">Run Test</button>
   <br/><br/>
-  <iframe id="vnc" width="100%" height="600px" src="https://33ec-128-24-44-209.ngrok-free.app"></iframe>
+
+  <!-- Load the NoVNC interface -->
+  <iframe 
+    id="vnc" 
+    width="100%" 
+    height="600px" 
+    src="http://testneovnc-demo.eastus.azurecontainer.io:6080/">
+  </iframe>
 
   <script>
     async function triggerTest() {
-        const response = await fetch("https://api.github.com/repos/TestNeoAI/localdriver/actions/workflows/playwright-live.yml/dispatches", 
-        {
-            method: "POST",
-        headers: {
-          "Authorization": "Bearer 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",
-          "Accept": "application/vnd.github.v3+json"
-        },
-        body: JSON.stringify({ ref: "main" })
-      });
-      alert("Test started. Please wait a few seconds...");
+      // This assumes the container running at ACI has a web server 
+      // with a /run-test endpoint or similar
+      const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6080/run-test");
 
+      if (response.ok) {
+        alert("Test started.");
+      } else {
+        alert("Failed to start test.");
+      }
     }
-     
   </script>
 </body>
 </html>

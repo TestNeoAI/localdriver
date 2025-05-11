@@ -13,3 +13,4 @@ RUN chmod +x /start.sh
 
 EXPOSE 5900 6080
 CMD ["/start.sh"]
+COPY .docker/tests /tests
