@@ -17,4 +17,4 @@ RUN pip3 install flask flask-cors
 
 EXPOSE 5900 6080 6081
 
-CMD ["/start.sh"]
+CMD ["bash", "/start.sh"]

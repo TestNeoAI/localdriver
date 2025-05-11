@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Start a virtual display
+# Start virtual display
 Xvfb :1 -screen 0 1024x768x16 &
 
 # Start window manager
@@ -12,8 +12,5 @@ x11vnc -forever -usepw -display :1 &
 # Start noVNC (websockify)
 websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
 
-# Start Flask server for triggering test
-python3 /server.py &
-
-# Keep container running
-tail -f /dev/null
+# Start Flask server (❌ DO NOT background this process)
+python3 /server.py
