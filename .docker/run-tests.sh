@@ -1,10 +1,10 @@
 #!/bin/bash
 
-export DISPLAY=:1
-cd /tests
+export DISPLAY=:1  # Important for GUI display to show in VNC
 
-# Install and ensure dependencies
-npx playwright install
+# Optional: run a window manager like openbox (only once)
+# openbox &
 
-# Run test with Chromium flags to work inside Docker and be visible in Xvfb
-npx playwright test google-search.spec.js --headed --project=chromium -- --launch-options='{"args":["--no-sandbox","--disable-dev-shm-usage"]}'
+# Run Playwright test in headed mode
+npx playwright test tests/google-search.spec.js --headed
+
