@@ -10,8 +10,8 @@ RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
 
 # Copy scripts
 COPY .docker/start.sh /start.sh
-COPY server.py /server.py
-COPY run-tests.sh /run-tests.sh
+COPY .docker/server.py /server.py
+COPY .docker/run-tests.sh /run-tests.sh
 
 RUN chmod +x /start.sh /run-tests.sh
 
