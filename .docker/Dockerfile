@@ -13,7 +13,7 @@ RUN pip3 install flask flask_cors
 COPY .docker/start.sh /start.sh  
 COPY .docker/server.py /server.py  
 COPY .docker/run-tests.sh /run-tests.sh  
-COPY .tests/google-search.spec.js /google-search.spec.js
+COPY .docker/google-search.spec.js /google-search.spec.js
 
   
 # Make scripts executable  
