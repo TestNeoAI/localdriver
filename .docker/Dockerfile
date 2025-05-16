@@ -22,10 +22,14 @@ RUN apt-get update && apt-get install -y \
 RUN pip3 install flask flask_cors
 
 # Install Playwright for Node.js
-# Install Playwright and its browsers
+# Set up working directory for Node
+WORKDIR /playwright-setup
+
+# Create package.json and install Playwright
 RUN npm init -y && \
     npm install playwright && \
     npx playwright install
+
 
 
 # Install noVNC + websockify manually
@@ -41,7 +45,7 @@ RUN mkdir -p ~/.vnc && x11vnc -storepasswd 1234 ~/.vnc/passwd
 COPY .docker/start.sh /start.sh
 COPY .docker/server.py /server.py
 COPY .docker/run-tests.sh /run-tests.sh
-COPY .docker/google-search.spec.js /tests/google-search.spec.js
+COPY .docker/testrun.py /tests/testrun.py
 
 
 # Make scripts executable
