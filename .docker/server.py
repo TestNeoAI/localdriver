@@ -9,7 +9,7 @@ CORS(app)
 def run_test():
     try:
         result = subprocess.run(
-            ["npx", "playwright", "test", "google-search.spec.js", "--headed"],
+            ["bash", "/run-tests.sh"],
             capture_output=True,
             text=True
         )

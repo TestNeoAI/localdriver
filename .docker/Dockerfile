@@ -29,10 +29,12 @@ RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
 RUN mkdir -p ~/.vnc && x11vnc -storepasswd 1234 ~/.vnc/passwd
 
 # Copy application files
+# Copy application files
 COPY .docker/start.sh /start.sh
 COPY .docker/server.py /server.py
 COPY .docker/run-tests.sh /run-tests.sh
 COPY .docker/google-search.spec.js /tests/google-search.spec.js
+
 
 # Make scripts executable
 RUN chmod +x /start.sh /run-tests.sh
