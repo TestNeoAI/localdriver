@@ -1,7 +1,9 @@
 #!/bin/bash
 
+echo "🚀 Starting VNC-enabled Playwright container"
+
 # Start Xvfb
-echo "Starting Xvfb..."
+echo "🎬 Starting Xvfb..."
 Xvfb :1 -screen 0 1024x768x16 &
 sleep 2
 
@@ -17,13 +19,23 @@ fi
 export DISPLAY=:1
 
 # Start window manager
+echo "🧱 Starting Fluxbox..."
 fluxbox &
+sleep 2
 
-# Start VNC
+# Start VNC server
+echo "📡 Starting x11vnc..."
 x11vnc -display :1 -nopw -forever -shared &
+sleep 2
 
 # Start noVNC
-websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
+echo "🌐 Starting noVNC..."
+/opt/novnc/utils/novnc_proxy --vnc localhost:5900 --listen 6080 &
+# OR: websockify --web=/opt/novnc 6080 localhost:5900 &
 
-# Start Flask server
+# Optional: Run Playwright test automatically (headful)
+# npx playwright test --headed
+
+# Start Flask backend
+echo "🔧 Starting Flask server..."
 python3 /server.py
