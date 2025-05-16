@@ -1,37 +1,44 @@
 # Base image with Playwright and X11 support  
 FROM mcr.microsoft.com/playwright:v1.43.1-focal
 
-# Avoid interactive prompts during apt install  
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install additional packages (for VNC and noVNC support)
+# Install necessary packages
 RUN apt-get update && apt-get install -y \
     fluxbox \
     x11vnc \
     xvfb \
-    novnc \
-    websockify \
     curl \
     wget \
     python3 \
     python3-pip \
+    git \
+    net-tools \
+    xterm \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies for Flask
+# Install Python Flask API dependencies
 RUN pip3 install flask flask_cors
 
-# Copy required scripts and test files
+# Install noVNC + websockify manually
+RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
+    git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify
+
+# Setup VNC password
+RUN mkdir -p ~/.vnc && x11vnc -storepasswd 1234 ~/.vnc/passwd
+
+# Copy application files
 COPY .docker/start.sh /start.sh
 COPY .docker/server.py /server.py
 COPY .docker/run-tests.sh /run-tests.sh
-COPY .docker/google-search.spec.js /google-search.spec.js
+COPY .docker/google-search.spec.js /tests/google-search.spec.js
 
 # Make scripts executable
 RUN chmod +x /start.sh /run-tests.sh
 
-# Expose VNC, noVNC, and Flask ports
+# Expose VNC (5900), noVNC (6080), Flask API (6081)
 EXPOSE 5900 6080 6081
 
-# Entry point
+# Start services
 CMD ["/start.sh"]
