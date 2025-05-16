@@ -19,19 +19,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python Flask API dependencies
-RUN pip3 install flask flask_cors
+# Install Python Flask API dependencies and Playwright
+RUN pip3 install flask flask_cors playwright && \
+    python3 -m playwright install
 
 # Install Playwright for Node.js
 # Set up working directory for Node
-WORKDIR /playwright-setup
-
-# Create package.json and install Playwright
-RUN npm init -y && \
-    npm install playwright && \
-    npx playwright install
-
-
-
+WORKDIR /tests
+ 
 # Install noVNC + websockify manually
 RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify
