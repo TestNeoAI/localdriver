@@ -27,9 +27,11 @@ RUN git clone https://github.com/novnc/noVNC.git /opt/novnc && \
 
 # Setup VNC password
 RUN mkdir -p ~/.vnc && x11vnc -storepasswd 1234 ~/.vnc/passwd
+# Install Playwright for Node.js
+RUN npm install -g playwright
 
 # Copy application files
-# Copy application files
+ 
 COPY .docker/start.sh /start.sh
 COPY .docker/server.py /server.py
 COPY .docker/run-tests.sh /run-tests.sh

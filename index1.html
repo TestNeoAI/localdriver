@@ -1,37 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Live Test Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+    #status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h1>Automation Live UI</h1>
 
   <button onclick="triggerTest()">Run Test</button>
-  <br/><br/>
+  <div id="status"></div>
 
   <!-- Load the NoVNC interface -->
   <iframe 
     id="vnc" 
-    width="100%" 
-    height="600px" 
     src="http://testneovnc-demo.eastus.azurecontainer.io:6080/vnc.html">
   </iframe>
 
   <script>
     async function triggerTest() {
+      const statusDiv = document.getElementById("status");
+      statusDiv.textContent = "Triggering test...";
+
       try {
         const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6081/run-test");
-        if (response.ok) {
-          alert("Test started. Watch the VNC screen.");
-        } else {
-          alert("Failed to start test.");
+        
+        if (!response.ok) {
+          const errText = await response.text();
+          throw new Error(errText || "Request failed");
         }
+
+        const result = await response.json();
+        statusDiv.textContent = "✅ Test started. Watch the VNC screen.";
+        console.log("Server response:", result);
       } catch (error) {
         console.error("Error:", error);
-        alert("Error triggering test.");
+        statusDiv.textContent = "❌ Failed to start test: " + error.message;
       }
     }
   </script>
-  
 </body>
 </html>
