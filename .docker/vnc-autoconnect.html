@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AutoConnect VNC</title>
+  <meta charset="utf-8">
+  <script src="app/webutil.js"></script>
+  <script src="app/base64.js"></script>
+  <script src="app/keyboard.js"></script>
+  <script src="app/util.js"></script>
+  <script src="app/ui.js"></script>
+  <script src="core/rfb.js"></script>
+</head>
+<body>
+  <div id="noVNC_screen">
+    <canvas id="noVNC_canvas"></canvas>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      UI.prime();  // safely initialize
+      setTimeout(() => {
+        UI.load();  // load settings
+        UI.connect(); // auto-connect
+      }, 300); // short delay to ensure UI is ready
+    });
+  </script>
+</body>
+</html>
