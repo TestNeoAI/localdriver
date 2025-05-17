@@ -41,10 +41,7 @@ COPY .docker/start.sh /start.sh
 COPY .docker/server.py /server.py
 COPY .docker/run-tests.sh /run-tests.sh
 COPY .docker/testrun.py /tests/testrun.py
-# Add custom noVNC HTML that auto-connects
-
-COPY .docker/vnc-autoconnect.html /opt/novnc/vnc-autoconnect.html
-
+ 
 # Make scripts executable
 RUN chmod +x /start.sh /run-tests.sh
 
