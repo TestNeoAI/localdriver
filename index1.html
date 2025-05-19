@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Live Test Viewer</title>
   <style>
     body {
@@ -12,9 +13,12 @@
     h1 {
       color: #333;
     }
-    button {
-      padding: 10px 20px;
+    select, button {
+      padding: 10px;
       font-size: 16px;
+      margin-right: 10px;
+    }
+    button {
       background-color: #007bff;
       color: white;
       border: none;
@@ -34,44 +38,68 @@
       margin-top: 10px;
       font-weight: bold;
     }
+    #output {
+      margin-top: 10px;
+      white-space: pre-wrap;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
   </style>
 </head>
 <body>
   <h1>Automation Live UI</h1>
 
+  <select id="fileSelect">
+    <option value="">-- Select a Test File --</option>
+    <option value="login_test.py">login_test.py</option>
+    <option value="signup_test.py">signup_test.py</option>
+  </select>
   <button onclick="triggerTest()">Run Test</button>
   <div id="status"></div>
+  <div id="output"></div>
 
-  <!-- Load the NoVNC interface -->
   <iframe 
-  id="vnc" 
-  src="http://testneovnc-demo.eastus.azurecontainer.io:6080/vnc-autoconnect.html">
-</iframe>
-
-
-
+    id="vnc" 
+    src="http://testneovnc-demo.eastus.azurecontainer.io:6080/vnc.html">
+  </iframe>
 
   <script>
     async function triggerTest() {
       const statusDiv = document.getElementById("status");
-      statusDiv.textContent = "Triggering test...";
+      const outputDiv = document.getElementById("output");
+      const selectedFile = document.getElementById("fileSelect").value;
+
+      if (!selectedFile) {
+        statusDiv.textContent = "⚠️ Please select a test file first.";
+        return;
+      }
+
+      statusDiv.textContent = "⏳ Running test...";
+      outputDiv.textContent = "";
 
       try {
-        const response = await fetch("http://testneovnc-demo.eastus.azurecontainer.io:6081/run-test");
-        
-        if (!response.ok) {
-          const errText = await response.text();
-          throw new Error(errText || "Request failed");
-        }
-
+        const response = await fetch(`http://testneovnc-demo.eastus.azurecontainer.io:6081/run-test?file=${encodeURIComponent(selectedFile)}`);
         const result = await response.json();
-        statusDiv.textContent = "✅ Test started. Watch the VNC screen.";
-        console.log("Server response:", result);
+
+        if (response.ok) {
+          statusDiv.textContent = "✅ Test started. Watch the VNC screen.";
+          outputDiv.textContent = result.stdout + "\n" + result.stderr;
+        } else {
+          statusDiv.textContent = "❌ Test failed to start.";
+          outputDiv.textContent = result.error || "Unknown error.";
+        }
       } catch (error) {
         console.error("Error:", error);
-        statusDiv.textContent = "❌ Failed to start test: " + error.message;
+        statusDiv.textContent = "❌ Request error.";
+        outputDiv.textContent = error.message;
       }
     }
   </script>
 </body>
 </html>
+
+
+
+

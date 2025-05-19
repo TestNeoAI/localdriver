@@ -1,3 +1,5 @@
 #!/bin/bash
-export DISPLAY=:1
-python3 /tests/testrun.py
+TEST_FILE=$1
+
+echo "▶️ Running: $TEST_FILE"
+python3 "$TEST_FILE"
